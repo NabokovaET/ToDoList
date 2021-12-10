@@ -1,0 +1,12 @@
+.ToDoForm {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4rem;
+    &__input {
+        margin-right: 1rem;
+    }
+    &__button{
+        margin-bottom: 0!important;
+    }
+}
