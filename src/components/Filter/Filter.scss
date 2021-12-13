@@ -1,0 +1,18 @@
+@import "../../index.scss";
+
+.Filter {
+    @extend %for-flex;
+    &__button {
+        margin: 0 .5rem;
+        padding: .2rem;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        &:hover {
+            border-color: rgba(175, 47, 47, 0.2);
+     
+        }
+        // .active {
+        //     border-color: rgba(175, 47, 47, 0.2);
+        // }
+    }
+}

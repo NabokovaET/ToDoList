@@ -1,14 +1,16 @@
 import React, {Component} from 'react'
+import "./ToDoBlock.scss"
 import ToDoForm from '../ToDoForm/ToDoForm'
 import ToDoList from '../ToDoList/ToDoList'
-import "./ToDoBlock.scss"
+import ToDoFooter from '../ToDoFooter/ToDoFooter'
 
 class ToDoBlock extends Component {
 
     state = {
         value: '', 
         list: [],
-        cheked: false
+        filter: [],
+        active: false
     }
 
     handelSubmit = e => {
@@ -21,35 +23,40 @@ class ToDoBlock extends Component {
     handelClick = () => {
         this.addItem();
     }
+
     addItem = () => {
         const {value, list} = this.state;
-        let newList = [];
-        // let newList = list.filter(item => item !== value);
-        let chek = list.includes(value);
-
-        if(!chek) {
-            newList.push(value);
-        } else {
-          return newList
-        }
-        newList = [...newList, ...list];
+        let newList = [...list];
+        let incld = newList.includes(value);
+        !incld ? newList = [{text: value}, ...list] : newList = [...list];
         this.setState({list: newList});
     }
+    deleteItem = index => {
+        const {list} = this.state;
+        let deleteList = [...list];
+        deleteList.splice(index,1);
+        this.setState({list: deleteList});
+    }
+    checkItem = index => {
+        const {list} = this.state;
+        let checkList = [...list];
+        
+        // checkList[index].cheked = false ? checkList[index].cheked = true : checkList[index].cheked;
+        this.setState({list: checkList});
+        console.log(checkList);
+    }
+    setFilter = () => {
 
-    // itemDelete = (e) => {
-    //     const {list} = this.state;
-    //     console.log(list)
-    //     console.log(e.target.value)
-    //     // let deleteList = list.filter(item => item === );
-    //     // console.log(deleteList)
-    // }
+    }
+    clearList = () => {
+        this.setState({list: []})
+    }
 
     render() {
-        const { value, list, cheked } = this.state;
-
+        const { value, list, active } = this.state;
+        const count = list.length;
         return (
             <div className='ToDoBlock'>
-                <h1>todos</h1>
                 <ToDoForm 
                     value={value}
                     handelSubmit={this.handelSubmit}
@@ -57,8 +64,14 @@ class ToDoBlock extends Component {
                     handelClick={this.handelClick}/>
                 <ToDoList
                     list={list}
-                    cheked={cheked}
-                    itemDelete={this.itemDelete}
+                    deleteItem={this.deleteItem}
+                    checkItem={this.checkItem}
+                />
+                <ToDoFooter
+                    count={count}
+                    active={active}
+                    setFilter={this.setFilter}
+                    clearList={this.clearList}
                 />
             </div>
         )

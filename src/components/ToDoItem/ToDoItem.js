@@ -1,31 +1,25 @@
 import React from 'react'
-import { ListGroup, Form} from 'react-bootstrap'
 import "./ToDoItem.scss"
-import close from "../../img/close.png"
 
-const ToDoItem = ({list, item, cheked}) => {
-
-    const itemDelete = () => {
-        let deleteList = list.filter(elem => elem !== item);
-        console.log(deleteList)
-    }
+const ToDoItem = ({index, item, deleteItem, checkItem}) => {
 
     return (
-        <div className='ToDoItem'>
-            <Form.Check 
+        <li className='ToDoItem'>
+            <input
+                className='ToDoItem__checkbox'
                 type="checkbox" 
-                // checked = { cheked ? true : false }
+                onClick={() => checkItem(index)}
                 />
-            <ListGroup.Item className='ToDoItem__text'>
+            <label/>
+            <label className='ToDoItem__text'>
                 {item}
-            </ListGroup.Item>
+            </label>
             <button
                 className='ToDoItem__btn'
-                onClick={itemDelete}
+                onClick={() => deleteItem(index)}
             >
-                <img src={close} alt='delete'/>
             </button>
-        </div>
+        </li>
     )
 }
 

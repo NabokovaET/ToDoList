@@ -1,1 +1,9 @@
-@import "../node_modules/bootstrap/scss/bootstrap.scss";
+.App {
+    &__title {
+        margin-top: 3rem;
+        font-size: 100px;
+        font-weight: 100;
+        color: rgba(175, 47, 47, 0.15);
+        text-align: center;
+    }
+}

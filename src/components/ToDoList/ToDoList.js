@@ -1,26 +1,25 @@
 import React from 'react'
-import { ListGroup } from 'react-bootstrap'
 import ToDoItem from '../ToDoItem/ToDoItem'
 import "./ToDoList.scss"
 
-const ToDoList = ({list, cheked, itemDelete}) => {
+const ToDoList = ({list, deleteItem, checkItem}) => {
 
-    const items = list.map((item, i) => {
+    const items = list.map((item, index) => {
         return (
             <ToDoItem
-                key={i}
-                list={list}
-                item={item}
-                cheked={cheked}
-                itemDelete={itemDelete}
+                key={index}
+                index={index}
+                item={item.text}
+                deleteItem={deleteItem}
+                checkItem={checkItem}
             />
         )
     })
 
     return (
-        <ListGroup className='ToDoList'>
+        <ul className='ToDoList'>
             {items}
-        </ListGroup>
+        </ul>
     )
 }
 

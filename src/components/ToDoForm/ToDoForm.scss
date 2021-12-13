@@ -1,10 +1,36 @@
+@import "../../index.scss";
+
 .ToDoForm {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 4rem;
+    padding: 0 1rem 0 0;
+    border-bottom: 1px solid $color;
+    &__label {
+        width: 60px;
+        height: 34px;
+        transform: rotate(90deg);
+        &::before {
+            content: '❯';
+            font-size: 22px;
+            color: $color;
+            padding: 10px 27px 10px 27px;
+        }
+    }
     &__input {
+        font-size: 24px;
+        line-height: 1.4em;
+        font-weight: 300;
+        color: #4d4d4d;
+        font-style: italic;
+        width: 100%;
         margin-right: 1rem;
+        padding: 1rem 1rem 1rem 60px;
+        border: none;
+        outline: none;
+        ::placeholder {
+            color: $color;
+        }
     }
     &__button{
         margin-bottom: 0!important;

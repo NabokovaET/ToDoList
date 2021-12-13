@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import "./ToDoForm.scss"
 
 const ToDoForm = ({value, handelSubmit, handelChange, handelClick}) => {
@@ -7,18 +7,19 @@ const ToDoForm = ({value, handelSubmit, handelChange, handelClick}) => {
         <Form 
             className='ToDoForm' 
             onSubmit={handelSubmit} >
-            <Form.Control 
+            <label className='ToDoForm__label'/>
+            <input
                 className='ToDoForm__input' 
                 type='text' 
                 placeholder='What needs to be done?'
                 value={value}
                 onChange={handelChange}/>
-            <Button 
+            <button
                 type='submit' 
-                className="ToDoForm__button mb-3" 
+                className="ToDoForm__button" 
                 onClick={handelClick}>
                 Add 
-            </Button>
+            </button>
         </Form>
     )
 }
