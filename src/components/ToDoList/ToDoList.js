@@ -2,20 +2,20 @@ import React from 'react'
 import ToDoItem from '../ToDoItem/ToDoItem'
 import "./ToDoList.scss"
 
-const ToDoList = ({list, deleteItem, checkItem}) => {
+const ToDoList = ({list, checked, deleteItem, checkItem}) => {
 
-    const items = list.map((item, index) => {
+    const items = list.map((item) => {
         return (
             <ToDoItem
-                key={index}
-                index={index}
-                item={item.text}
+                key={item.id}
+                item={item}
+                checked={checked}
                 deleteItem={deleteItem}
                 checkItem={checkItem}
             />
         )
     })
-
+ 
     return (
         <ul className='ToDoList'>
             {items}

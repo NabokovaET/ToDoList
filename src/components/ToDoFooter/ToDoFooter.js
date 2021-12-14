@@ -2,7 +2,7 @@ import React from 'react'
 import Filter from '../Filter/Filter'
 import "./ToDoFooter.scss"
 
-const ToDoFooter = ({count, active, setFilter, clearList}) => {
+const ToDoFooter = ({count, active, completed, setFilter, clearList}) => {
     return (
         <div className='ToDoFooter'>
             <div className='ToDoFooter__notification'>
@@ -12,7 +12,7 @@ const ToDoFooter = ({count, active, setFilter, clearList}) => {
                 setFilter={setFilter}
                 active={active}/>
             <button
-                className="ToDoFooter__button" 
+                className={completed ? "ToDoFooter__button active" : "ToDoFooter__button"}
                 onClick={clearList}>
                 Clear completed
             </button>

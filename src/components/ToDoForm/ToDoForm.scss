@@ -9,6 +9,7 @@
     &__label {
         width: 60px;
         height: 34px;
+        cursor: pointer;
         transform: rotate(90deg);
         &::before {
             content: '❯';

@@ -5,18 +5,18 @@ const Filter = ({ active, setFilter }) => {
     return (
         <div className='Filter'>
             <button
-                className={active ? "Filter__button" : "Filter__button active"}
-                onClick={setFilter}>
+                className={active === 'all' ? "Filter__button active" : "Filter__button"}
+                onClick={() => setFilter('all')}>
                 All
             </button> 
             <button
-                className={active ? "Filter__button" : "Filter__button active"}
-                onClick={setFilter}>
+                className={active === 'active' ? "Filter__button active" : "Filter__button"}
+                onClick={() => setFilter('active')}>
                 Active
             </button> 
             <button
-                className={active ? "Filter__button" : "Filter__button active"}
-                onClick={setFilter}>
+                className={active === 'completed' ? "Filter__button active" : "Filter__button"}
+                onClick={() => setFilter('completed')}>
                 Completed
             </button> 
         </div>

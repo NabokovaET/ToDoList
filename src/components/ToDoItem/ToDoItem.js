@@ -1,23 +1,21 @@
 import React from 'react'
 import "./ToDoItem.scss"
 
-const ToDoItem = ({index, item, deleteItem, checkItem}) => {
-
+const ToDoItem = ({checked, item, deleteItem, checkItem}) => {
+    
     return (
         <li className='ToDoItem'>
             <input
                 className='ToDoItem__checkbox'
                 type="checkbox" 
-                onClick={() => checkItem(index)}
-                />
+                onClick={() => checkItem(item.id)}/>
             <label/>
-            <label className='ToDoItem__text'>
-                {item}
+            <label className={checked ? 'ToDoItem__text checked' : 'ToDoItem__text'}>
+                {item.text}
             </label>
             <button
                 className='ToDoItem__btn'
-                onClick={() => deleteItem(index)}
-            >
+                onClick={() => deleteItem(item.id)}>
             </button>
         </li>
     )
