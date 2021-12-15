@@ -10,23 +10,29 @@ class ToDoBlock extends Component {
     state = {
         value: '', 
         list: [],
-        filter: [],
-        active: 'all',
+        status: 'All',
         completed: false,
-        checked: false
+        isCheck: false
     }
 
     handelSubmit = e => {
         e.preventDefault();
         this.setState({value: ''});
+        this.addItem();
+    }
+    handelSubmitItem = (id, value) => {
+        const {list} = this.state;
+        let updateItem = list.map(item => {
+            if(item.id === id) {
+                return {...item, text: value}
+            }
+            return item
+        })
+        this.setState({list: updateItem});
     }
     handelChange = e => {
         this.setState({value: e.target.value});
     }
-    handelClick = () => {
-        this.addItem();
-    }
-
     addItem = () => {
         const {value, list} = this.state;
         let newList = [...list];
@@ -34,12 +40,11 @@ class ToDoBlock extends Component {
         !incld 
             ? newList = [{id: nanoid(7), text: value, checked: false}, ...list] 
             : newList = [...list];
-        this.setState({list: newList, filter: newList});
+        this.setState({list: newList});
     }
     deleteItem = index => {
         const {list} = this.state;
         let deleteList = list.filter(item => item.id !== index);
-        console.log(deleteList)
         this.setState({list: deleteList});
     }
     checkItem = index => {
@@ -50,40 +55,35 @@ class ToDoBlock extends Component {
             }
             return item
         })
-        console.log(checkList)
         this.setState({list: checkList});
         this.activeComleted(checkList);
-
-        // checkList[index].checked = !checkList[index].checked;
-        // checkList[index].checked 
-        //     ? this.setState({checked: true}) 
-        //     : this.setState({checked: false});
-        // console.log(checkList[index].checked)
     }
-    checkAll = () => {
+    checkAll = (isCheck) => {
         const {list} = this.state;
-        let checkAll = list.filter(item => {
-            if(item.checked === false) {
-                return item.checked = true
-            } 
-            return item
+
+        let checkAll = list.map(item => {
+            if(item.checked !== isCheck) {
+                return {...item, checked: !item.checked}
+            } return item
         })
         this.setState({list: checkAll});
+
     }
-    setFilter = status => {
-        const {list} = this.state;
+    setFilter = (status) => {
+        this.setState({status: status})
+    }
+    updateList = () => {
+        const {list, status} = this.state;
 
         switch (status) {
-            case "active":
+            case "Active":
                 let activeList = list.filter(item => item.checked === false);
-                this.setState({filter: activeList, active: 'active'})
-                break;
-            case "completed":
+                return activeList
+            case "Completed":
                 let completedList = list.filter(item => item.checked === true);
-                this.setState({filter: completedList, active: 'completed'})
-                break;
+                return completedList
             default:
-                this.setState({filter: list, active: 'all'})
+                return list
         }
     }
     activeComleted = (checkList) => {
@@ -95,12 +95,12 @@ class ToDoBlock extends Component {
     clearList = () => {
         const {list} = this.state;
         let clearList = list.filter(item => item.checked === false);
-        this.setState({filter: clearList})
+        this.setState({list: clearList})
         this.activeComleted(clearList);
     }
 
     render() {
-        const { value, list, active, completed, checked, filter } = this.state;
+        const { value, list, status, completed } = this.state;
         const count = list.filter(item => item.checked === false).length;
 
         return (
@@ -109,17 +109,16 @@ class ToDoBlock extends Component {
                     value={value}
                     handelSubmit={this.handelSubmit}
                     handelChange={this.handelChange}
-                    handelClick={this.handelClick}
                     checkAll={this.checkAll}/>
                 <ToDoList
-                    list={list}
-                    checked={checked}
+                    list={this.updateList()}
                     deleteItem={this.deleteItem}
                     checkItem={this.checkItem}
+                    handelSubmitItem={this.handelSubmitItem}
                 />
                 <ToDoFooter
                     count={count}
-                    active={active}
+                    status={status}
                     completed={completed}
                     setFilter={this.setFilter}
                     clearList={this.clearList}

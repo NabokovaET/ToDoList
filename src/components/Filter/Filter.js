@@ -1,24 +1,28 @@
 import React from 'react'
 import "./Filter.scss"
 
-const Filter = ({ active, setFilter }) => {
+const Filter = ({ setFilter, status }) => {
+
+    const filterList = [
+        { name: 'All'},
+        { name: 'Active'}, 
+        { name: 'Completed'}
+    ]
+
+    const filterItem = filterList.map( item => {
+        return (
+            <button
+                key={item.name}
+                className={item.name === status ? "Filter__button active" : "Filter__button"}
+                onClick={() => setFilter(item.name)}>
+                {item.name}
+            </button> 
+        )
+    })
+
     return (
         <div className='Filter'>
-            <button
-                className={active === 'all' ? "Filter__button active" : "Filter__button"}
-                onClick={() => setFilter('all')}>
-                All
-            </button> 
-            <button
-                className={active === 'active' ? "Filter__button active" : "Filter__button"}
-                onClick={() => setFilter('active')}>
-                Active
-            </button> 
-            <button
-                className={active === 'completed' ? "Filter__button active" : "Filter__button"}
-                onClick={() => setFilter('completed')}>
-                Completed
-            </button> 
+            {filterItem}
         </div>
     )
 }
