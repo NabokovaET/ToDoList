@@ -78,3 +78,15 @@
     }
 
 }
+
+@media screen and (max-width: 425px) {
+    .ToDoItem {
+        &__text {
+            font-size: 1rem;
+        }
+        &__checkbox {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}

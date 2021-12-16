@@ -25,9 +25,11 @@ const ToDoItem = ({item, deleteItem, checkItem, handelSubmitItem}) => {
                 ? <Form 
                     onSubmit={handelItem}
                     className='ToDoItem__edit'>
-                    <input 
+                    <input
+                        autoFocus={true} 
                         value={value}
-                        onChange={(e) => setValue(e.target.value)}/>
+                        onChange={(e) => setValue(e.target.value)}
+                        onBlur={handelItem}/>
                 </Form>
                 : <label 
                     onDoubleClick={() => setEdit(true)}
