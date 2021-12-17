@@ -1,9 +1,7 @@
-import React from 'react'
-import ToDoItem from '../ToDoItem/ToDoItem'
-import "./ToDoList.scss"
+import React from "react";
+import ToDoItem from "../ToDoItem/ToDoItem";
 
-const ToDoList = ({list, deleteItem, checkItem, handelSubmitItem}) => {
-
+const ToDoList = ({ list, deleteItem, checkItem, handelSubmitItem }) => {
     const items = list.map((item) => {
         return (
             <ToDoItem
@@ -13,14 +11,10 @@ const ToDoList = ({list, deleteItem, checkItem, handelSubmitItem}) => {
                 checkItem={checkItem}
                 handelSubmitItem={handelSubmitItem}
             />
-        )
-    })
- 
-    return (
-        <ul className='ToDoList'>
-            {items}
-        </ul>
-    )
-}
+        );
+    });
 
-export default ToDoList
+    return <ul className='ToDoList'>{items}</ul>;
+};
+
+export default ToDoList;
