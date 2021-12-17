@@ -9,12 +9,19 @@
     &__label {
         width: 60px;
         height: 34px;
+        cursor: pointer;
         transform: rotate(90deg);
         &::before {
             content: '❯';
             font-size: 22px;
             color: $color;
             padding: 10px 27px 10px 27px;
+ 
+        }
+        &.check {
+            &::before {
+                color: #8f8888;
+            }
         }
     }
     &__input {
@@ -25,14 +32,30 @@
         font-style: italic;
         width: 100%;
         margin-right: 1rem;
-        padding: 1rem 1rem 1rem 60px;
+        padding: 1rem;
         border: none;
         outline: none;
         ::placeholder {
             color: $color;
         }
     }
-    &__button{
-        margin-bottom: 0!important;
+}
+
+@media screen and (max-width: 425px) {
+    .ToDoForm {
+        &__input {
+            font-size: 1rem;
+            margin-right: .5rem;
+            padding: .5rem;
+        }
+        &__label {
+            width: 40px;
+            height: 25px;
+            &::before {
+                content: '❯';
+                font-size: 1rem;
+                padding: 5px 14px 4px 14px;
+            }
+        }
     }
 }

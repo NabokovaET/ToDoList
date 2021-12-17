@@ -1,26 +1,20 @@
-import React from 'react'
-import ToDoItem from '../ToDoItem/ToDoItem'
-import "./ToDoList.scss"
+import React from "react";
+import ToDoItem from "../ToDoItem/ToDoItem";
 
-const ToDoList = ({list, deleteItem, checkItem}) => {
-
-    const items = list.map((item, index) => {
+const ToDoList = ({ list, deleteItem, checkItem, handelSubmitItem }) => {
+    const items = list.map((item) => {
         return (
             <ToDoItem
-                key={index}
-                index={index}
-                item={item.text}
+                key={item.id}
+                item={item}
                 deleteItem={deleteItem}
                 checkItem={checkItem}
+                handelSubmitItem={handelSubmitItem}
             />
-        )
-    })
+        );
+    });
 
-    return (
-        <ul className='ToDoList'>
-            {items}
-        </ul>
-    )
-}
+    return <ul className='ToDoList'>{items}</ul>;
+};
 
-export default ToDoList
+export default ToDoList;
