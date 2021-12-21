@@ -8,7 +8,7 @@ const ToDoItem = ({ item, deleteItem, checkItem, handelSubmitItem }) => {
 
     const handelItem = (e) => {
         e.preventDefault();
-        handelSubmitItem(item.id, value);
+        handelSubmitItem(item._id, value);
         setEdit(false);
     };
 
@@ -17,7 +17,7 @@ const ToDoItem = ({ item, deleteItem, checkItem, handelSubmitItem }) => {
             <input
                 className={item.checked ? "ToDoItem__checkbox checked" : "ToDoItem__checkbox"}
                 type='checkbox'
-                onClick={() => checkItem(item.id)}
+                onClick={() => checkItem(item._id)}
             />
             <label />
             {edit ? (
@@ -32,7 +32,7 @@ const ToDoItem = ({ item, deleteItem, checkItem, handelSubmitItem }) => {
                     {item.text}
                 </label>
             )}
-            <button className='ToDoItem__btn' onClick={() => deleteItem(item.id)}></button>
+            <button className='ToDoItem__btn' onClick={() => deleteItem(item._id)}></button>
         </li>
     );
 };

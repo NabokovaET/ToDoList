@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./ToDoBlock.scss";
-import { nanoid } from "nanoid";
 import ToDoForm from "../ToDoForm/ToDoForm";
 import ToDoList from "../ToDoList/ToDoList";
 import ToDoFooter from "../ToDoFooter/ToDoFooter";
@@ -12,11 +11,18 @@ class ToDoBlock extends Component {
         isCheck: false,
     };
 
+    componentDidMount() {
+        fetch('http://localhost:1234/items')
+            .then(response => response.json())
+            .then(data => this.setState({ list: data }))
+            .catch(err => {console.log(err)})
+    }
+
     handelSubmitItem = (id, value) => {
         const { list } = this.state;
         let newList = list.map((item) => {
             if (item.id === id) {
-                return { ...item, text: value };
+                return {...item, text: value};
             }
             return item;
         });
@@ -24,23 +30,38 @@ class ToDoBlock extends Component {
     };
 
     addItem = (value) => {
-        const { list } = this.state;
-
-        if (value.trim()) this.setState({ list: [{ id: nanoid(7), text: value, checked: false }, ...list] });
+        if (value.trim()) {
+            fetch('http://localhost:1234/items', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json;charset=utf-8'},
+                body: JSON.stringify({text: value})
+            })
+                .then(response => response.json())
+                .then(item => this.setState({list: [item, ...this.state.list]}))
+                .catch(err => {console.log(err)})
+        }
     };
 
     deleteItem = (index) => {
-        this.setState({
-            list: this.state.list.filter((item) => item.id !== index),
-        });
+        fetch(`http://localhost:1234/items/${index}`, {method: 'DELETE'})
+            .then(response => response.json())
+            .then(itemDelete => this.setState({list: this.state.list.filter((item) => item._id !== itemDelete._id)}))
+            .catch(err => {console.log(err)})
     };
 
     checkItem = (index) => {
         const { list } = this.state;
 
         let checkList = list.map((item) => {
-            if (item.id === index) {
-                return { ...item, checked: !item.checked };
+            if (item._id === index) {
+                fetch(`http://localhost:1234/items/${index}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({checked: !item.checked})
+                })
+                    .then(response => response.json())
+                    .then(itemUpdate => this.setState({list: [itemUpdate, ...list]}))
+                    .catch(err => {console.log(err)})
+                    return {...item, checked: !item.checked}
             }
             return item;
         });
