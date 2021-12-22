@@ -12,73 +12,85 @@ class ToDoBlock extends Component {
     };
 
     componentDidMount() {
-        fetch('http://localhost:1234/items')
+        fetch('http://localhost:1234/todos')
             .then(response => response.json())
-            .then(data => this.setState({ list: data }))
+            .then(data => this.setState({ list: data.reverse() }))
             .catch(err => {console.log(err)})
+    }
+
+    fetchWrap = (url, method, body) => {
+        return fetch(url, {
+            method: method,
+            headers: {'Content-Type': 'application/json;charset=utf-8'},
+            body: JSON.stringify(body)
+        })
     }
 
     handelSubmitItem = (id, value) => {
         const { list } = this.state;
-        let newList = list.map((item) => {
-            if (item.id === id) {
-                return {...item, text: value};
-            }
-            return item;
-        });
-        this.setState({ list: newList });
+        if(value) {
+            this.fetchWrap(`http://localhost:1234/todos/${id}`, 'PUT', {text: value})
+            .then(() => {
+                let newList = list.map((item) => {
+                    if (item._id === id) {
+                        return {...item, text: value};
+                    }
+                    return item;
+                })
+                this.setState({list: newList});
+            })
+            .catch(err => {console.log(err)})
+        }
+
     };
 
     addItem = (value) => {
         if (value.trim()) {
-            fetch('http://localhost:1234/items', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json;charset=utf-8'},
-                body: JSON.stringify({text: value})
-            })
+            this.fetchWrap('http://localhost:1234/todos', 'POST', {text: value})
                 .then(response => response.json())
                 .then(item => this.setState({list: [item, ...this.state.list]}))
                 .catch(err => {console.log(err)})
         }
     };
 
-    deleteItem = (index) => {
-        fetch(`http://localhost:1234/items/${index}`, {method: 'DELETE'})
+    deleteItem = (id) => {
+        this.fetchWrap(`http://localhost:1234/todos/${id}`, 'DELETE')
             .then(response => response.json())
             .then(itemDelete => this.setState({list: this.state.list.filter((item) => item._id !== itemDelete._id)}))
             .catch(err => {console.log(err)})
     };
 
-    checkItem = (index) => {
+    checkItem = (id) => {    
         const { list } = this.state;
+        const checkItem = list.find(item => item._id === id);
 
-        let checkList = list.map((item) => {
-            if (item._id === index) {
-                fetch(`http://localhost:1234/items/${index}`, {
-                    method: 'PUT',
-                    body: JSON.stringify({checked: !item.checked})
+        this.fetchWrap(`http://localhost:1234/todos/${id}`, 'PUT', {checked: !checkItem.checked})
+            .then(() => {
+                const checkList = list.map(item => {
+                    if (item._id === id) {
+                        return {...item, checked: !item.checked}
+                    }
+                    return item;
                 })
-                    .then(response => response.json())
-                    .then(itemUpdate => this.setState({list: [itemUpdate, ...list]}))
-                    .catch(err => {console.log(err)})
-                    return {...item, checked: !item.checked}
-            }
-            return item;
-        });
-
-        this.setState({
-            list: checkList,
-            isCheck: checkList.every((item) => item.checked),
-        });
+                this.setState({
+                    list: checkList,
+                    isCheck: checkList.every((item) => item.checked)
+                });
+            })
+            .catch(err => {console.log(err)})
     };
 
     checkAll = () => {
         const { list, isCheck } = this.state;
 
-        this.setState({
-            list: list.map((item) => ({ ...item, checked: !isCheck })),
-            isCheck: !isCheck,
-        });
+        this.fetchWrap(`http://localhost:1234/todos`, 'PUT', {checked: !isCheck})
+            .then(() => {
+                this.setState({
+                    list: list.map((item) => ({ ...item, checked: !isCheck })),
+                    isCheck: !isCheck,
+                });
+            })
+            .catch(err => {console.log(err)})
     };
 
     setFilter = (status) => {
@@ -101,10 +113,12 @@ class ToDoBlock extends Component {
     };
 
     clearList = () => {
-        this.setState({
-            list: this.state.list.filter((item) => !item.checked),
-            isCheck: false,
-        });
+        this.fetchWrap(`http://localhost:1234/todos`, 'DELETE')
+            .then(() => this.setState({
+                list: this.state.list.filter((item) => !item.checked),
+                isCheck: false,
+            }))
+            .catch(err => {console.log(err)})
     };
 
     render() {
