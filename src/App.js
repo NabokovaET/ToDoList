@@ -1,6 +1,7 @@
 import React from "react";
-import "./App.scss";
 import { Container } from "react-bootstrap";
+import "./App.scss";
+
 import ToDoBlock from "./components/ToDoBlock/ToDoBlock";
 
 function App() {

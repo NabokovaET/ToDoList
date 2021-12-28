@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import "./ToDoItem.scss";
 import { Form } from "react-bootstrap";
+import { connect } from 'react-redux'
+import { removeTodo, checkTodo, editTodo } from '../../actions/actionCreators';
 
-const ToDoItem = ({ item, deleteItem, checkItem, handelSubmitItem }) => {
+const ToDoItem = ({ list, item, removeTodo, checkTodo, editTodo }) => {
     const [edit, setEdit] = useState(false);
     const [value, setValue] = useState(item.text);
 
     const handelItem = (e) => {
         e.preventDefault();
-        handelSubmitItem(item._id, value);
+        if(value){editTodo(item._id, value);}
         setEdit(false);
     };
 
@@ -17,7 +19,7 @@ const ToDoItem = ({ item, deleteItem, checkItem, handelSubmitItem }) => {
             <input
                 className={item.checked ? "ToDoItem__checkbox checked" : "ToDoItem__checkbox"}
                 type='checkbox'
-                onClick={() => checkItem(item._id)}
+                onClick={() => checkTodo(list, item._id)}
             />
             <label />
             {edit ? (
@@ -32,9 +34,22 @@ const ToDoItem = ({ item, deleteItem, checkItem, handelSubmitItem }) => {
                     {item.text}
                 </label>
             )}
-            <button className='ToDoItem__btn' onClick={() => deleteItem(item._id)}></button>
+            <button className='ToDoItem__btn' onClick={() => removeTodo(item._id)}></button>
         </li>
     );
 };
 
-export default ToDoItem;
+const mapStateToProps = ({todolistReducer}) => {
+    const { list } = todolistReducer
+    return {list: list}
+}
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        removeTodo: (id) => dispatch(removeTodo(id)),
+        checkTodo: (list, id) => dispatch(checkTodo(list, id)),
+        editTodo: (id, text) => dispatch(editTodo(id, text))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToDoItem);

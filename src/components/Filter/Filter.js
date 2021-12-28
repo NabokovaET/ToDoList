@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from 'react-redux';
+import { setFilter } from '../../actions/actionCreators';
 import "./Filter.scss";
 
 const Filter = ({ setFilter, status }) => {
@@ -19,4 +21,15 @@ const Filter = ({ setFilter, status }) => {
     return <div className='Filter'>{filterItem}</div>;
 };
 
-export default Filter;
+const mapStateToProps = ({todolistReducer}) => {
+    const { status } = todolistReducer
+    return { status: status }
+}
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        setFilter: (status) => dispatch(setFilter(status))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);

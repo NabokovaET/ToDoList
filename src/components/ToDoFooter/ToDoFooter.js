@@ -1,17 +1,26 @@
 import React from "react";
+import { connect } from 'react-redux';
 import Filter from "../Filter/Filter";
+import { clearListTodo } from '../../actions/actionCreators';
 import "./ToDoFooter.scss";
 
-const ToDoFooter = ({ count, status, completed, setFilter, clearList }) => {
+const ToDoFooter = ({ count, completed, clearListTodo }) => {
+
     return (
         <div className='ToDoFooter'>
             <div className='ToDoFooter__notification'>{count} items left</div>
-            <Filter setFilter={setFilter} status={status} />
-            <button className={completed ? "ToDoFooter__button active" : "ToDoFooter__button"} onClick={clearList}>
+            <Filter/>
+            <button className={completed ? "ToDoFooter__button active" : "ToDoFooter__button"} onClick={() => clearListTodo()}>
                 Clear completed
             </button>
         </div>
     );
 };
 
-export default ToDoFooter;
+const mapDispatchToProps = dispatch => {
+    return {
+        clearListTodo: () => dispatch(clearListTodo()),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(ToDoFooter);
