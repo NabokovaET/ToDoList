@@ -1,15 +1,27 @@
-import { GET_DATA, ADD_TODO, REMOVE_TODO, CHECK_TODO, CHECK_ALL_TODO, SET_FILTER, EDIT_TODO, CLEAR_LIST_TODO } from '../actions/types'
+import { 
+  GET_DATA, 
+  ADD_TODO, 
+  REMOVE_TODO, 
+  CHECK_TODO, 
+  CHECK_ALL_TODO, 
+  SET_FILTER, 
+  EDIT_TODO, 
+  CLEAR_LIST_TODO,
+  USER_LOGIN, 
+  USER_REGISTER } from '../actions/types'
 
 const initialState = {
   list: [],
   status: "All",
   isCheck: false,
+  isAuth: true, 
+  isRegistr: true
 }
 
-const editTodo = (list, id, text) => {
+const editTodo = (list, id, name) => {
   return list.map((item) => {
     if (item._id === id) {
-      return {...item, text: text};
+      return {...item, name: name};
     }
     return item;
   })
@@ -18,13 +30,13 @@ const editTodo = (list, id, text) => {
 const checkTodo = (state, id) => {
   const checkList = state.list.map(item => {
     if (item._id === id) {
-      return {...item, checked: !item.checked};
+      return {...item, completed: !item.completed};
     }
     return item;
   })
   return {
     list: checkList,
-    isCheck: checkList.every((item) => item.checked)
+    isCheck: checkList.every((item) => item.completed)
   }
 }
 
@@ -34,7 +46,7 @@ const todolistReducer = (state = initialState, action) => {
       return { 
         ...state,
         list: action.payload,
-        isCheck: action.payload.every((item) => item.checked)
+        isCheck: action.payload.every((item) => item.completed)
       };
     case ADD_TODO: 
       return {
@@ -49,7 +61,7 @@ const todolistReducer = (state = initialState, action) => {
     case EDIT_TODO: 
       return {
         ...state,
-        list: editTodo(state.list, action.payload.id, action.payload.text)
+        list: editTodo(state.list, action.payload.id, action.payload.name)
       }
     case CHECK_TODO: 
     const {list, isCheck} = checkTodo(state, action.payload);
@@ -61,19 +73,29 @@ const todolistReducer = (state = initialState, action) => {
     case CHECK_ALL_TODO: 
       return {
         ...state,
-        list: state.list.map((item) => ({ ...item, checked: !state.isCheck})),
+        list: state.list.map((item) => ({ ...item, completed: !state.isCheck})),
         isCheck: !state.isCheck
       }
     case CLEAR_LIST_TODO: 
       return {
         ...state,
-        list: state.list.filter((item) => !item.checked),
+        list: state.list.filter((item) => !item.completed),
         isCheck: false
       }
     case SET_FILTER: 
       return {
         ...state,
         status: action.payload
+      }
+    case USER_LOGIN: 
+      return {
+        ...state,
+        isAuth: action.payload
+      }
+    case USER_REGISTER: 
+      return {
+        ...state,
+        isRegistr: action.payload,
       }
     default:
       return state;

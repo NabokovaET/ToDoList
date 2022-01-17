@@ -15,28 +15,31 @@ const ToDoBlock = ({list, status, getData}) => {
     const updateList = () => {
         switch (status) {
             case "Active":
-                let activeList = list.filter((item) => !item.checked);
+                let activeList = list.filter((item) => !item.completed);
                 return activeList;
             case "Completed":
-                let completedList = list.filter((item) => item.checked);
+                let completedList = list.filter((item) => item.completed);
                 return completedList;
             default:
                 return list;
         }
     };
 
-    const count = list.filter((item) => !item.checked).length;
+    const count = list.filter((item) => !item.completed).length;
     const completed = list.length > count;
 
     return (
-        <div className='ToDoBlock'>
-            <ToDoForm />
-            <ToDoList list={updateList()}/>
-            <ToDoFooter
-                count={count}
-                completed={completed}
-            />
-        </div>
+        <>
+            <h1 className='App__title'>todos</h1>
+            <div className='ToDoBlock'>
+                <ToDoForm />
+                <ToDoList list={updateList()}/>
+                <ToDoFooter
+                    count={count}
+                    completed={completed}
+                />
+            </div>
+        </>
     );
 }
 

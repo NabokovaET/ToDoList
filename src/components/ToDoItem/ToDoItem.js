@@ -6,7 +6,7 @@ import { removeTodo, checkTodo, editTodo } from '../../actions/actionCreators';
 
 const ToDoItem = ({ list, item, removeTodo, checkTodo, editTodo }) => {
     const [edit, setEdit] = useState(false);
-    const [value, setValue] = useState(item.text);
+    const [value, setValue] = useState(item.name);
 
     const handelItem = (e) => {
         e.preventDefault();
@@ -17,7 +17,7 @@ const ToDoItem = ({ list, item, removeTodo, checkTodo, editTodo }) => {
     return (
         <li className='ToDoItem'>
             <input
-                className={item.checked ? "ToDoItem__checkbox checked" : "ToDoItem__checkbox"}
+                className={item.completed ? "ToDoItem__checkbox checked" : "ToDoItem__checkbox"}
                 type='checkbox'
                 onClick={() => checkTodo(list, item._id)}
             />
@@ -29,9 +29,9 @@ const ToDoItem = ({ list, item, removeTodo, checkTodo, editTodo }) => {
             ) : (
                 <label
                     onDoubleClick={() => setEdit(true)}
-                    className={item.checked ? "ToDoItem__text checked" : "ToDoItem__text"}
+                    className={item.completed ? "ToDoItem__text checked" : "ToDoItem__text"}
                 >
-                    {item.text}
+                    {item.name}
                 </label>
             )}
             <button className='ToDoItem__btn' onClick={() => removeTodo(item._id)}></button>
@@ -40,15 +40,14 @@ const ToDoItem = ({ list, item, removeTodo, checkTodo, editTodo }) => {
 };
 
 const mapStateToProps = ({todolistReducer}) => {
-    const { list } = todolistReducer
-    return {list: list}
+    return {list: todolistReducer.list}
 }
   
 const mapDispatchToProps = dispatch => {
     return {
         removeTodo: (id) => dispatch(removeTodo(id)),
         checkTodo: (list, id) => dispatch(checkTodo(list, id)),
-        editTodo: (id, text) => dispatch(editTodo(id, text))
+        editTodo: (id, name) => dispatch(editTodo(id, name))
     }
 }
 
