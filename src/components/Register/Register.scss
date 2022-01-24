@@ -8,7 +8,7 @@
         margin-bottom: 2rem;
     }
     &__form {
-        width: 50%;
+        width: 35%;
     }
     &__input-block {
         display: flex;
@@ -26,31 +26,40 @@
             width: 100%;
             margin-right: 1rem;
             padding: .5rem;
+            padding-right: 2rem;
             border: 1px solid #4d4d4d;
             border-radius: 10px;
             outline: none;
+            &.error {
+                border-color: rgb(167, 41, 41);
+            }
+        }
+        p {
+            font-size: 12px;
         }
     }
 
     &__btn-block {
         display: flex;
+        align-items: center;
+        justify-content: center;
         margin-top: 1rem;
-        a {
+        > * {
             margin: 1rem;
             padding: .5rem;
             color: #4d4d4d;
-            border: 1px solid #4d4d4d;
-            border-radius: 10px;
             text-decoration: none;
             &.green {
+                border: 1px solid #4d4d4d;
+                border-radius: 10px;
                 background-color:rgba(15, 182, 23, 0.27);
                 &:hover{
                     background-color:rgba(19, 156, 17, 0.55);
                 }
             }
-            &:hover{
-                background-color:rgb(219, 217, 217);
-            }
+        }
+        a {
+            color: #4d4d4d;
         }
     }
 }

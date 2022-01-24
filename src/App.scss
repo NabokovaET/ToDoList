@@ -10,3 +10,13 @@
 .error {
     color: rgb(167, 41, 41);
 }
+label.view {
+    position: absolute;
+    right: 3%;
+    top: 22%;
+    cursor: pointer;
+    & img {
+        width: 14px;
+        height: auto;
+    }
+}
