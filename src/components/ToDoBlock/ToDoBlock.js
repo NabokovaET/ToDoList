@@ -1,16 +1,23 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { connect } from 'react-redux';
 import "./ToDoBlock.scss";
 import ToDoForm from "../ToDoForm/ToDoForm";
 import ToDoList from "../ToDoList/ToDoList";
 import ToDoFooter from "../ToDoFooter/ToDoFooter";
 import { getData } from '../../actions/actionCreators';
+import { useQuery } from '@apollo/client';
+import { ALL_TODO } from '../../GraphQL/Queries';
 
 const ToDoBlock = ({list, status, getData}) => {
+    
+    const { data, loading, error } = useQuery(ALL_TODO, {method: 'GET'});
 
     useEffect(() => {
-        getData()
-    }, []);
+        if(!loading) {
+            getData(data)
+        }
+        if (error) return `Error! ${error.message}`;
+    }, [data]);
 
     const updateList = () => {
         switch (status) {

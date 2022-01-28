@@ -1,8 +1,22 @@
-import { ToDoAction, ToDoActionTypes, ToDoState } from '../types/types'
+import { 
+  GET_DATA, 
+  ADD_TODO, 
+  REMOVE_TODO, 
+  CHECK_TODO, 
+  CHECK_ALL_TODO, 
+  SET_FILTER, 
+  EDIT_TODO, 
+  CLEAR_LIST_TODO, 
+  USER_LOGIN,
+  USER_REGISTER,
+  GOOGLE_ACCOUNT } from '../actions/types'
+
+import { ToDoAction, ToDoState } from '../Interfaces/interface'
 
 const initialState: ToDoState = {
   list: [],
   status: "All",
+  userId: "",
   isCheck: false,
   isAuth: true, 
   isRegistr: true,
@@ -11,35 +25,35 @@ const initialState: ToDoState = {
 
 const todolistReducer = (state = initialState, action: ToDoAction): ToDoState => {
   switch(action.type) {
-    case ToDoActionTypes.GET_DATA:
+    case GET_DATA:
       return { 
         ...state,
         list: action.payload,
         isCheck: action.payload.every((item) => item.completed)
       };
-    case ToDoActionTypes.ADD_TODO: 
+    case ADD_TODO: 
       return {
         ...state,
         list: [action.payload, ...state.list]
       }
-    case ToDoActionTypes.REMOVE_TODO: 
+    case REMOVE_TODO: 
       return {
         ...state,
-        list: state.list.filter((item) => item._id !== action.payload)
+        list: state.list.filter((item) => item.id !== action.payload)
       }
-    case ToDoActionTypes.EDIT_TODO: 
+    case EDIT_TODO: 
       return {
         ...state,
         list: state.list.map((item) => {
-          if (item._id === action.payload.id) {
+          if (item.id === action.payload.id) {
             return {...item, name: action.payload.name};
           }
           return item;
         })
       }
-    case ToDoActionTypes.CHECK_TODO: 
+    case CHECK_TODO: 
       const checkList = state.list.map(item => {
-        if (item._id === action.payload) {
+        if (item.id === action.payload) {
           return {...item, completed: !item.completed};
         }
         return item;
@@ -49,34 +63,36 @@ const todolistReducer = (state = initialState, action: ToDoAction): ToDoState =>
         list: checkList,
         isCheck: checkList.every((item) => item.completed)
       }
-    case ToDoActionTypes.CHECK_ALL_TODO: 
+    case CHECK_ALL_TODO: 
       return {
         ...state,
         list: state.list.map((item) => ({ ...item, completed: !state.isCheck})),
         isCheck: !state.isCheck
+
       }
-    case ToDoActionTypes.CLEAR_LIST_TODO: 
+    case CLEAR_LIST_TODO: 
       return {
         ...state,
         list: state.list.filter((item) => !item.completed),
         isCheck: false
       }
-    case ToDoActionTypes.SET_FILTER: 
+    case SET_FILTER: 
       return {
         ...state,
         status: action.payload
       }
-    case ToDoActionTypes.USER_LOGIN: 
+    case USER_LOGIN: 
       return {
         ...state,
-        isAuth: action.payload
+        isAuth: action.payload.isAuth,
+        userId: action.payload.userId,
       }
-    case ToDoActionTypes.USER_REGISTER: 
+    case USER_REGISTER: 
       return {
         ...state,
         isRegistr: action.payload,
       }
-    case ToDoActionTypes.GOOGLE_ACCOUNT: 
+    case GOOGLE_ACCOUNT: 
       return {
         ...state,
         isGoogle: action.payload,

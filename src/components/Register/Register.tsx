@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
@@ -6,22 +6,25 @@ import { userRegister } from '../../actions/actionCreators';
 import "./Register.scss";
 import eye from '../../img/eye.png';
 
-const Register = ({ isRegistr, userRegister }) => {
+interface Error {
+    email?: string,
+    password?: string,
+}
 
+const Register = ({ isRegistr, userRegister } : {isRegistr: boolean, userRegister: Function }) => {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
-    const [errors, setErrors] = useState({});
-    const [valid, setValid] = useState(false);
-    const [view, setView] = useState(false);
+    const [errors, setErrors] = useState<Error>({} as Error);
+    const [valid, setValid] = useState<boolean>(false);
+    const [view, setView] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log(name)
-        if (Object.keys(errors).length === 0 && name && password) {
+        if (!(Object.keys(errors).length) && name && password) {
             setValid(true)
         }
     }, [errors]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>):void => {
         e.preventDefault();
         // setErrors(formValid());
 
@@ -32,10 +35,8 @@ const Register = ({ isRegistr, userRegister }) => {
         }
     };
 
-    const formValid = () => {
-
-        let errors = {};
-
+    const formValid = (errors: Error) => {
+        // let errors = {};
         if (!name) {
             errors.email = 'Email address is required';
         } else if (!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -49,7 +50,6 @@ const Register = ({ isRegistr, userRegister }) => {
             .test(password)) {
             errors.password = 'Password is invalid';
         }
-
         return errors;
     }
 
@@ -62,8 +62,7 @@ const Register = ({ isRegistr, userRegister }) => {
                     <input
                         type='email'
                         value={name}
-                        // placeholder="username@maill.com"
-                        onBlur={() => setErrors(formValid())}
+                        onBlur={() => setErrors(formValid(errors))}
                         onChange={(e) => {setName(e.target.value)}}
                         className={!isRegistr ? 'Register__input_email error' : 'Register__input_email'}
                         required
@@ -79,7 +78,7 @@ const Register = ({ isRegistr, userRegister }) => {
                         <input
                             type={view ? 'text' : 'password'}
                             value={password}
-                            onBlur={() => setErrors(formValid())}
+                            onBlur={() => setErrors(formValid(errors))}
                             onChange={(e) => setPassword(e.target.value)}
                             className={!isRegistr ? 'Register__input_password error' : 'Register__input_password'}
                             required
@@ -118,13 +117,13 @@ const Register = ({ isRegistr, userRegister }) => {
     );
 }
 
-const mapStateToProps = ({todolistReducer}) => {
+const mapStateToProps = (todolistReducer: any) => {
     return { isRegistr: todolistReducer.isRegistr}
 }
   
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
     return {
-        userRegister: (name, password) => dispatch(userRegister(name, password)),
+        userRegister: (name: string, password: string) => dispatch(userRegister(name, password)),
     }
 }
 

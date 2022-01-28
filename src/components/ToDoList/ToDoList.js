@@ -5,7 +5,7 @@ const ToDoList = ({ list, handelSubmitItem }) => {
     const items = list.map((item) => {
         return (
             <ToDoItem
-                key={item._id}
+                key={item.id}
                 item={item}
                 handelSubmitItem={handelSubmitItem}
             />

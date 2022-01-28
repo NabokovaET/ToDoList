@@ -1,3 +1,4 @@
+import React from "react";
 import { 
   GET_DATA, 
   ADD_TODO, 
@@ -9,82 +10,57 @@ import {
   CLEAR_LIST_TODO, 
   USER_LOGIN,
   USER_REGISTER,
-  GOOGLE_ACCOUNT } from './types'
+  GOOGLE_ACCOUNT } from './types';
+import { ToDoAction } from '../Interfaces/interface';
+import jwt_decode from 'jwt-decode';
 
-const token = localStorage.getItem('token');
+// const token = localStorage.getItem('token');
+const url = 'https://todoapp-nest-backend.herokuapp.com/todos';
 
-const fetchWrap = (url, method, body) => {
-   return fetch(url, {
-    method: method,
-    headers: {'Content-Type': 'application/json;charset=utf-8', 'Authorization': `Bearer ${token}`},
-    body: JSON.stringify(body)
-  })
-  .then(response => {
-    if (response.status === 401) {
-      localStorage.removeItem('token');
-      window.location = ('/');
-    } 
-    // if (response.access_token !== undefined) {
-    //   return response.json()
-    // }
-    else return response.json()
-  })
+// const fetchWrap = (url, method, body) => {
+//    return fetch(url, {
+//     method: method,
+//     headers: {'Content-Type': 'application/json;charset=utf-8', 'Authorization': `Bearer ${token}`},
+//     body: JSON.stringify(body)
+//   })
+//   .then(response => {
+//     if (response.status === 401) {
+//       localStorage.removeItem('token');
+//       window.location = ('/');
+//     } else return response.json();
+//   })
+// }
+
+//-------------ActionsGraphQl-----------------//
+
+export const getData = (data) => {
+  return dispatch => {dispatch({type: GET_DATA, payload: data.getTodoList})}
 }
 
-export const getData = () => {
-  const page = 1
-  const size = 5
-  return dispatch => {
-    return fetchWrap(`https://todoapp-nest-backend.herokuapp.com/todos?page=${page}&size=${size}`)
-    .then(data => {
-      const length = data.length
-      dispatch({type: GET_DATA, payload: data.reverse().splice(1, length)})
-    })
-  }
-}
-
-export const addTodo = (name) => {
-  return dispatch => {
-    return fetchWrap('https://todoapp-nest-backend.herokuapp.com/todos', 'POST', {name: name})
-      .then(item => dispatch({type: ADD_TODO, payload: item}))
-  }
+export const addTodo = (data) => {
+  return dispatch => {dispatch({type: ADD_TODO, payload: data.addTodo})}
 }
 
 export const removeTodo = (id) => {
-  return dispatch => {
-    return fetchWrap(`https://todoapp-nest-backend.herokuapp.com/todos/${id}`, 'DELETE')
-      .then(() => dispatch({type: REMOVE_TODO, payload: id}))
-  }
+  return dispatch => {dispatch({type: REMOVE_TODO, payload: id})}
 }
 
-export const checkTodo = (list, id) => {
-  const checkItem = list.find(item => item._id === id);
-  return dispatch => {
-    return fetchWrap(`https://todoapp-nest-backend.herokuapp.com/todos/${id}`, 'PUT', {completed: !checkItem.completed})
-      .then(() => dispatch({type: CHECK_TODO, payload: id}))
-  }
+export const checkTodo = (id) => {
+  return dispatch => {dispatch({type: CHECK_TODO, payload: id})}
 }
 
-export const checkAllTodo = (isCheck) => {
-  return dispatch => {
-    return fetchWrap(`https://todoapp-nest-backend.herokuapp.com/todos`, 'PUT', {allCompleted: !isCheck})
-      .then(() => dispatch({type: CHECK_ALL_TODO}))
-  }
+export const checkAllTodo = () => {
+  return dispatch => {dispatch({type: CHECK_ALL_TODO})}
 }
 
 export const editTodo = (id, name) => {
-  return dispatch => {
-    return fetchWrap(`https://todoapp-nest-backend.herokuapp.com/todos/${id}`, 'PUT', {name: name})
-      .then(() => dispatch({type: EDIT_TODO, payload: {id, name}}))
-  }
+  return dispatch => {dispatch({type: EDIT_TODO, payload: {id, name}})}
 }
 
 export const clearListTodo = () => {
-  return dispatch => {
-    return fetchWrap(`https://todoapp-nest-backend.herokuapp.com/todos`, 'DELETE')
-      .then(() => dispatch({type: CLEAR_LIST_TODO}))
-  }
+  return dispatch => {dispatch({type: CLEAR_LIST_TODO})}
 }
+
 export const setFilter = (status) => {
   return {
     type: SET_FILTER,
@@ -92,29 +68,32 @@ export const setFilter = (status) => {
   }
 }
 
+//-------------ActionsHeroku-----------------//
+
 export const userLogin = (username, password) => {
   return dispatch => {
-    // return fetchWrap('https://todoapp-nest-backend.herokuapp.com/todos/login', 'POST', {username: username, password: password})
-    return fetch('https://todoapp-nest-backend.herokuapp.com/todos/login', {
+    return fetch(`${url}/login`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json;charset=utf-8'},
       body: JSON.stringify({username: username, password: password})
     })
     .then(response => response.json())
     .then(response => {
+      const decode = jwt_decode(response.access_token);
       if (response.access_token !== undefined) {
         localStorage.setItem('token', response.access_token)
         window.location = ('/todo');
-        dispatch({type: USER_LOGIN, payload: true})
-      } else dispatch({type: USER_LOGIN, payload: false})
+        dispatch({type: USER_LOGIN, payload: {isAuth: true, userId: decode._id}})
+      } else dispatch({type: USER_LOGIN, payload: {isAuth: false, userId: decode._id}})
     })
+
   }
 }
 
 export const userRegister = (username, password) => {
   return dispatch => {
     // return fetchWrap('http://localhost:1234/todos/register', 'POST', {username: username, password: password})
-    return fetch('https://todoapp-nest-backend.herokuapp.com/todos/register', {
+    return fetch(`${url}/register`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json;charset=utf-8'},
       body: JSON.stringify({username: username, password: password})
@@ -132,7 +111,7 @@ export const userRegister = (username, password) => {
 
 export const  googleAccount = () => {
   return dispatch => {
-    return fetch('https://todoapp-nest-backend.herokuapp.com/todos/google', {
+    return fetch(`${url}/google`, {
       method: 'GET',
       headers: {'Content-Type': 'application/json;charset=utf-8'},
     })
@@ -146,6 +125,8 @@ export const  googleAccount = () => {
     })
   }
 }
+
+
 
   
 

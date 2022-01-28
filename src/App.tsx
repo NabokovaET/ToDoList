@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
-import {
-  Routes,
-  Route,
-  Navigate
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.scss";
 
 import ToDoBlock from "./components/ToDoBlock/ToDoBlock";
 import Auth from "./components/Auth/Auth";
 import Register from "./components/Register/Register";
 import NotFound from "./components/NotFound/NotFound";
-// import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
-// import Main from "./components/Main/Main";
 
-function App() {
 
-  const [auth, setAuth] = useState()
+const App: React.FC = () => {
+
+  const [auth, setAuth] = useState<string | null>(null)
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -40,13 +35,6 @@ function App() {
             element={ auth ? <ToDoBlock/> : <Navigate to="/" replace/>}/>
           <Route path="*" element={<NotFound/>}/>
         </Routes>
-
-        {/* <Routes>
-          <Route path="app" element={<Main/>}>
-            <PrivateRoute isAuth={localStorage.getItem('token')} path="/todo" component={ToDoBlock} redirectTo='/login'/>
-          </Route>
-        </Routes> */}
-
       </Container>
     </div>
   );

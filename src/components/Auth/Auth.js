@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from 'react-hook-form'
 import { Link } from "react-router-dom";
@@ -9,15 +9,6 @@ import "./Auth.scss";
 const Auth = ({isAuth, userLogin}) => {
 
     const { register, formState: { errors }, handleSubmit } = useForm({mode: "onBlur"})
-
-    // const [name, setName] = useState("");
-    // const [password, setPassword] = useState("");
-
-    // const onSubmit = (e) => {
-    //     e.preventDefault();
-    //     setName("");
-    //     setPassword("");
-    // };
 
     const onSubmit = (data) => {
         console.log(data);
