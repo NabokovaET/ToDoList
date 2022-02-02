@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 import { userLogin, googleAccount } from '../../actions/actionCreators';
 import "./Auth.scss";
 
-const Auth = ({isAuth, userLogin}) => {
+const Auth = ({isAuth, userLogin} : {isAuth: boolean, userLogin: Function}) => {
 
     const { register, formState: { errors }, handleSubmit } = useForm({mode: "onBlur"})
 
-    const onSubmit = (data) => {
+    const onSubmit = (data: any) => {
         console.log(data);
         userLogin(data.email, data.password)
     }
@@ -29,7 +29,7 @@ const Auth = ({isAuth, userLogin}) => {
                         })}
                         // value={name}
                         // onChange={(e) => setName(e.target.value)}
-                        className={ !isAuth? 'error' : null}
+                        className={ !isAuth? 'error' : undefined}
                     />
                     {errors.email ? <p className="error">Email address is invalid</p> : <p>Format email@.ru</p>}
                 </div>
@@ -43,7 +43,7 @@ const Auth = ({isAuth, userLogin}) => {
                         })}
                         // value={password}
                         // onChange={(e) => setPassword(e.target.value)}
-                        className={ !isAuth? 'error' : null}
+                        className={ !isAuth? 'error' : undefined}
                     />
                     {errors.password ? <p className="error">Password is invalid</p> : <p>Include (a-z), (A-Z), (0-9), min 8 symbols</p>}
                 </div>
@@ -67,16 +67,14 @@ const Auth = ({isAuth, userLogin}) => {
     );
 }
 
-const mapStateToProps = ({todolistReducer}) => {
-    return { 
-        isAuth: todolistReducer.isAuth,
-        isGoogle: todolistReducer.isGoogle
-    }
+const mapStateToProps = ({todolistReducer} : {todolistReducer: any}) => {
+    const { isAuth, isGoogle } = todolistReducer;
+    return { isAuth, isGoogle }
 }
   
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
     return {
-        userLogin: (name, password) => dispatch(userLogin(name, password)),
+        userLogin: (name: string, password: number) => dispatch(userLogin(name, password)),
         googleAccount: () => dispatch(googleAccount())
     }
 }

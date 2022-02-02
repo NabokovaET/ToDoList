@@ -6,20 +6,18 @@ import { addTodo, checkAllTodo } from '../../actions/actionCreators';
 import { useMutation } from "@apollo/client";
 import { ADD_TODO, COMPLETED_All_TODO } from '../../GraphQL/Mutation';
 
-
-const ToDoForm = ({ addTodo, checkAllTodo, isCheck, userId }) => {
+const ToDoForm = ({ addTodo, checkAllTodo, isCheck, userId } : { addTodo: Function, checkAllTodo: Function, isCheck: boolean, userId: string }) => {
 
     console.log(userId)
     const [ value, setValue ] = useState("");
-    const [ newTodo, {data, errorAdd} ] = useMutation(ADD_TODO);
-    const [ completedAllTodo, {error: errorCompleted} ] = useMutation(COMPLETED_All_TODO);
+    const [ newTodo, { data } ] = useMutation(ADD_TODO);
+    const [ completedAllTodo] = useMutation(COMPLETED_All_TODO);
 
     useEffect(() => {
         if(data) {addTodo(data)};
-        if (errorAdd | errorCompleted) return `Error! ${errorAdd.message | errorCompleted.message}`;
     }, [data]);  
 
-    const handelSubmit = (e) => {
+    const handelSubmit = (e: React.FormEvent<HTMLFormElement>):void => {
         e.preventDefault();
         setValue("");
         if (value.trim()) {
@@ -36,11 +34,14 @@ const ToDoForm = ({ addTodo, checkAllTodo, isCheck, userId }) => {
         <Form className='ToDoForm' onSubmit={handelSubmit}>
             <label 
                 className={isCheck ? "ToDoForm__label check" : "ToDoForm__label"} 
-                onClick={() => completedAllTodo({ 
-                    variables: { 
-                        allCompleted: !isCheck, 
-                        userId: userId 
-                    }}) 
+                onClick={() => {
+                        completedAllTodo({ 
+                        variables: { 
+                            allCompleted: !isCheck, 
+                            userId: userId 
+                        }})
+                        checkAllTodo()
+                    }
                 }
             />
             <input
@@ -54,15 +55,15 @@ const ToDoForm = ({ addTodo, checkAllTodo, isCheck, userId }) => {
     );
 };
 
-const mapStateToProps = ({todolistReducer}) => {
+const mapStateToProps = ({todolistReducer} : {todolistReducer: any}) => {
     const { isCheck, userId } = todolistReducer;
     return { isCheck, userId }
 }
   
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
     return {
-        addTodo: (value) => dispatch(addTodo(value)),
-        checkAllTodo: (isCheck) => dispatch(checkAllTodo(isCheck))
+        addTodo: (value: any) => dispatch(addTodo(value)),
+        checkAllTodo: () => dispatch(checkAllTodo())
     }
 }
 

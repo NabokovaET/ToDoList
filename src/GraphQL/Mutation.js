@@ -29,7 +29,7 @@ export const DELETE_TODO = gql`
   }
 `;  
 
-export const DELETE_COMPLITED_TODO = gql`
+export const DELETE_COMPLETED_TODO = gql`
   mutation DeleteCompleted($userId: String!) {
     deleteCompleted(userId: $userId) {
       deletedCount
@@ -48,7 +48,7 @@ export const CHANGE_TODO = gql`
   }
 `;  
 
-export const COMPLITED_TODO = gql`
+export const COMPLETED_TODO = gql`
   mutation EditTodo($id: String!, $input: TodoInput!) {
     editTodo(id: $id, input: $input) {
       id

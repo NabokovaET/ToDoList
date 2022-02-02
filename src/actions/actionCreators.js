@@ -1,4 +1,4 @@
-import React from "react";
+
 import { 
   GET_DATA, 
   ADD_TODO, 
@@ -12,7 +12,6 @@ import {
   USER_REGISTER,
   GOOGLE_ACCOUNT } from './types';
 import { ToDoAction } from '../Interfaces/interface';
-import jwt_decode from 'jwt-decode';
 
 // const token = localStorage.getItem('token');
 const url = 'https://todoapp-nest-backend.herokuapp.com/todos';
@@ -33,8 +32,8 @@ const url = 'https://todoapp-nest-backend.herokuapp.com/todos';
 
 //-------------ActionsGraphQl-----------------//
 
-export const getData = (data) => {
-  return dispatch => {dispatch({type: GET_DATA, payload: data.getTodoList})}
+export const getData = (data, userId) => {
+  return dispatch => {dispatch({type: GET_DATA, payload: {list: data.getTodoList, userId}})}
 }
 
 export const addTodo = (data) => {
@@ -79,12 +78,11 @@ export const userLogin = (username, password) => {
     })
     .then(response => response.json())
     .then(response => {
-      const decode = jwt_decode(response.access_token);
       if (response.access_token !== undefined) {
         localStorage.setItem('token', response.access_token)
         window.location = ('/todo');
-        dispatch({type: USER_LOGIN, payload: {isAuth: true, userId: decode._id}})
-      } else dispatch({type: USER_LOGIN, payload: {isAuth: false, userId: decode._id}})
+        dispatch({type: USER_LOGIN, payload: true})
+      } else dispatch({type: USER_LOGIN, payload: false})
     })
 
   }

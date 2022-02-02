@@ -1,13 +1,12 @@
 import React from "react";
 import ToDoItem from "../ToDoItem/ToDoItem";
 
-const ToDoList = ({ list, handelSubmitItem }) => {
+const ToDoList = ({ list } : { list: any[] }) => {
     const items = list.map((item) => {
         return (
             <ToDoItem
                 key={item.id}
                 item={item}
-                handelSubmitItem={handelSubmitItem}
             />
         );
     });

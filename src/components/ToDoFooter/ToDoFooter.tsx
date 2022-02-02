@@ -4,15 +4,14 @@ import Filter from "../Filter/Filter";
 import { clearListTodo } from '../../actions/actionCreators';
 import "./ToDoFooter.scss";
 import { useMutation } from "@apollo/client";
-import { DELETE_COMPLITED_TODO } from '../../GraphQL/Mutation';
+import { DELETE_COMPLETED_TODO } from '../../GraphQL/Mutation';
 
-const ToDoFooter = ({ userId, count, completed, clearListTodo }) => {
+const ToDoFooter = ({ userId, count, completed, clearListTodo } : { userId: string, count: number, completed: boolean, clearListTodo: Function }) => {
 
-    const [ deleteComplitedTodo, {data, error} ] = useMutation(DELETE_COMPLITED_TODO);
+    const [ deleteComplitedTodo, { data } ] = useMutation(DELETE_COMPLETED_TODO);
 
     useEffect(() => {
         if(data){clearListTodo()};
-        if (error) return `Error! ${error.message}`;
     }, [data]);  
 
     return (
@@ -26,11 +25,11 @@ const ToDoFooter = ({ userId, count, completed, clearListTodo }) => {
     );
 };
 
-const mapStateToProps = ({todolistReducer}) => {
+const mapStateToProps = ({todolistReducer} : {todolistReducer: any}) => {
     return {userId: todolistReducer.userId}
 }
   
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
     return {
         clearListTodo: () => dispatch(clearListTodo()),
     }

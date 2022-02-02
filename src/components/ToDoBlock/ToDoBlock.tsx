@@ -7,16 +7,21 @@ import ToDoFooter from "../ToDoFooter/ToDoFooter";
 import { getData } from '../../actions/actionCreators';
 import { useQuery } from '@apollo/client';
 import { ALL_TODO } from '../../GraphQL/Queries';
+import jwt_decode from 'jwt-decode';
 
-const ToDoBlock = ({list, status, getData}) => {
-    
-    const { data, loading, error } = useQuery(ALL_TODO, {method: 'GET'});
+const ToDoBlock = ({list, status, getData} : {list: any[], status: string, getData: Function}) => {
+
+    const access_token: any = localStorage.getItem('token');
+    const decode: any = jwt_decode(access_token);
+    const userId: string = decode._id;
+    console.log(decode._id)
+
+    const { data } = useQuery(ALL_TODO, {variables: { userId, page: 1, size: 5 }});
 
     useEffect(() => {
-        if(!loading) {
-            getData(data)
+        if(data) {
+            getData(data, userId)
         }
-        if (error) return `Error! ${error.message}`;
     }, [data]);
 
     const updateList = () => {
@@ -50,7 +55,7 @@ const ToDoBlock = ({list, status, getData}) => {
     );
 }
 
-const mapStateToProps = ({todolistReducer}) => {
+const mapStateToProps = ({todolistReducer} : {todolistReducer: any}) => {
     const { list, status } = todolistReducer
     return {
         list: list,
@@ -58,9 +63,9 @@ const mapStateToProps = ({todolistReducer}) => {
     }
 }
   
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
     return {
-        getData: (data) => dispatch(getData(data)),
+        getData: (data: any[], userId: string) => dispatch(getData(data, userId)),
     }
 }
 

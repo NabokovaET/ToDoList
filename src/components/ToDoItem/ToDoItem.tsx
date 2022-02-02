@@ -4,22 +4,22 @@ import { Form } from "react-bootstrap";
 import { connect } from 'react-redux'
 import { removeTodo, checkTodo, editTodo } from '../../actions/actionCreators';
 import { useMutation } from "@apollo/client";
-import { DELETE_TODO, COMPLITED_TODO, CHANGE_TODO } from '../../GraphQL/Mutation';
+import { DELETE_TODO, COMPLETED_TODO, CHANGE_TODO } from '../../GraphQL/Mutation';
 
-const ToDoItem = ({ item, removeTodo, checkTodo, editTodo }) => {
+const ToDoItem = ({ item, removeTodo, checkTodo, editTodo } : { item: any, removeTodo: Function, checkTodo: Function, editTodo: Function }) => {
 
     const [edit, setEdit] = useState(false);
     const [value, setValue] = useState(item.name);
-    const [ deleteTodo, {data, error: errorDelete} ] = useMutation(DELETE_TODO);
-    const [ completedTodo, {error: errorCompleted} ] = useMutation(COMPLITED_TODO);
-    const [ changeTodo, {error: errorChange} ] = useMutation(CHANGE_TODO);
+    const [ deleteTodo, {data} ] = useMutation(DELETE_TODO);
+    const [ completedTodo ] = useMutation(COMPLETED_TODO);
+    const [ changeTodo ] = useMutation(CHANGE_TODO);
 
     useEffect(() => {
         if(data) { removeTodo(item.id) };
-        if (errorDelete | errorCompleted | errorChange) return `Error! ${errorDelete.message | errorCompleted.message | errorChange.message}`;
+        // if (errorDelete | errorCompleted | errorChange) return `Error! ${errorDelete.message | errorCompleted.message | errorChange.message}`;
     }, [data]);  
 
-    const handelItem = (e) => {
+    const handelItem = (e: React.FormEvent<HTMLFormElement | HTMLInputElement>):void  => {
         e.preventDefault();
         if (value) { 
             changeTodo({ variables: { 
@@ -49,7 +49,11 @@ const ToDoItem = ({ item, removeTodo, checkTodo, editTodo }) => {
             <label />
             {edit ? (
                 <Form onSubmit={handelItem} className='ToDoItem__edit'>
-                    <input autoFocus={true} value={value} onChange={(e) => setValue(e.target.value)} onBlur={handelItem} />
+                    <input 
+                        autoFocus={true} value={value} 
+                        onChange={(e) => setValue(e.target.value)} 
+                        onBlur={handelItem} 
+                    />
                 </Form>
             ) : (
                 <label
@@ -64,11 +68,11 @@ const ToDoItem = ({ item, removeTodo, checkTodo, editTodo }) => {
     );
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
     return {
-        removeTodo: (id) => dispatch(removeTodo(id)),
-        checkTodo: (id) => dispatch(checkTodo(id)),
-        editTodo: (id, name) => dispatch(editTodo(id, name))
+        removeTodo: (id: number) => dispatch(removeTodo(id)),
+        checkTodo: (id: number) => dispatch(checkTodo(id)),
+        editTodo: (id: number, name: string) => dispatch(editTodo(id, name))
     }
 }
 

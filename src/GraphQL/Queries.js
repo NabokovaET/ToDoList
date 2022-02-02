@@ -1,12 +1,16 @@
 import { gql } from "@apollo/client";
 
 export const ALL_TODO = gql`
-  query getTodoList {
-    getTodoList( userId:"61eebcd8a993c3d6ab294bf6", page: 1, size: 5) {
+  query getTodoList($userId: String!, $size: Float!, $page: Float!) {
+    getTodoList(userId: $userId, page: $page, size: $size) {
       id
       name
       completed
     }
   }
 `;
+
+
+
+
 
