@@ -28,8 +28,9 @@ const todolistReducer = (state = initialState, action: ToDoAction): ToDoState =>
     case GET_DATA:
       return { 
         ...state,
-        list: action.payload,
-        isCheck: action.payload.every((item) => item.completed)
+        list: action.payload.list,
+        userId: action.payload.userId,
+        isCheck: action.payload.list.every((item) => item.completed)
       };
     case ADD_TODO: 
       return {
@@ -84,8 +85,7 @@ const todolistReducer = (state = initialState, action: ToDoAction): ToDoState =>
     case USER_LOGIN: 
       return {
         ...state,
-        isAuth: action.payload.isAuth,
-        userId: action.payload.userId,
+        isAuth: action.payload,
       }
     case USER_REGISTER: 
       return {

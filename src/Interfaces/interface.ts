@@ -29,7 +29,7 @@ import {
   
   export interface getData {
     type:  typeof GET_DATA,
-    payload: any[]
+    payload: {list: any[], userId: string, isCheck: boolean}
   }
   export interface addTodo {
     type: typeof ADD_TODO,
@@ -59,7 +59,7 @@ import {
   }
   export interface userLogin {
     type: typeof USER_LOGIN,
-    payload: {isAuth: boolean, userId: string}
+    payload: boolean
   }
   export interface userRegister {
     type: typeof USER_REGISTER,

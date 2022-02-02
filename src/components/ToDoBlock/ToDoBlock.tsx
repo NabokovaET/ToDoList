@@ -7,17 +7,25 @@ import ToDoFooter from "../ToDoFooter/ToDoFooter";
 import { getData } from '../../actions/actionCreators';
 import { useQuery } from '@apollo/client';
 import { ALL_TODO } from '../../GraphQL/Queries';
+import { ToDo } from '../../Interfaces/interface';
+import jwt_decode from 'jwt-decode';
 
-const ToDoBlock = ({list, status, getData}) => {
-    
-    const { data, loading, error } = useQuery(ALL_TODO, {method: 'GET'});
+const ToDoBlock: React.FC<{list: ToDo[], status: string, getData: Function}> = ({list, status, getData}) => {
+   
+    const access_token: any = localStorage.getItem('token');
+    const decode: any = jwt_decode(access_token);
+    const userId: string = decode._id;
+    console.log(decode._id)
 
-    useEffect(() => {
-        if(!loading) {
-            getData(data)
-        }
-        if (error) return `Error! ${error.message}`;
-    }, [data]);
+    const { data, error } = useQuery(ALL_TODO, {variables: { userId, page: 1, size: 5 }});
+    console.log(data)
+    if (error) console.log(`Error! ${error.message}`) ;
+
+    // useEffect(() => {
+    //     if(data) {
+    //         getData(data, userId)
+    //     }
+    // }, []);
 
     const updateList = () => {
         switch (status) {
@@ -35,6 +43,7 @@ const ToDoBlock = ({list, status, getData}) => {
     const count = list.filter((item) => !item.completed).length;
     const completed = list.length > count;
 
+
     return (
         <>
             <h1 className='App__title'>todos</h1>
@@ -50,17 +59,14 @@ const ToDoBlock = ({list, status, getData}) => {
     );
 }
 
-const mapStateToProps = ({todolistReducer}) => {
+const mapStateToProps = ({todolistReducer}: {todolistReducer: any}) => {
     const { list, status } = todolistReducer
-    return {
-        list: list,
-        status: status
-    }
+    return { list, status }
 }
   
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
     return {
-        getData: (data) => dispatch(getData(data)),
+        getData: (data: any[], userId: string) => dispatch(getData(data, userId)),
     }
 }
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { setFilter } from '../../actions/actionCreators';
 import "./Filter.scss";
 
-const Filter = ({ setFilter, status }) => {
+const Filter = ({ setFilter, status } : { setFilter: Function, status: string }) => {
     const filterList = [{ name: "All" }, { name: "Active" }, { name: "Completed" }];
 
     const filterItem = filterList.map((item) => {
@@ -21,14 +21,13 @@ const Filter = ({ setFilter, status }) => {
     return <div className='Filter'>{filterItem}</div>;
 };
 
-const mapStateToProps = ({todolistReducer}) => {
-    const { status } = todolistReducer
-    return { status: status }
+const mapStateToProps = ({todolistReducer} : {todolistReducer: any}) => {
+    return { status: todolistReducer.status }
 }
   
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
     return {
-        setFilter: (status) => dispatch(setFilter(status))
+        setFilter: (status: string) => dispatch(setFilter(status))
     }
 }
 

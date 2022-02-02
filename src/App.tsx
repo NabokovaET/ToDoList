@@ -8,7 +8,6 @@ import Auth from "./components/Auth/Auth";
 import Register from "./components/Register/Register";
 import NotFound from "./components/NotFound/NotFound";
 
-
 const App: React.FC = () => {
 
   const [auth, setAuth] = useState<string | null>(null)

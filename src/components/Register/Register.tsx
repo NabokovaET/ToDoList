@@ -26,7 +26,6 @@ const Register = ({ isRegistr, userRegister } : {isRegistr: boolean, userRegiste
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>):void => {
         e.preventDefault();
-        // setErrors(formValid());
 
         if (valid) {
             setName("");
@@ -36,7 +35,6 @@ const Register = ({ isRegistr, userRegister } : {isRegistr: boolean, userRegiste
     };
 
     const formValid = (errors: Error) => {
-        // let errors = {};
         if (!name) {
             errors.email = 'Email address is required';
         } else if (!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -117,7 +115,7 @@ const Register = ({ isRegistr, userRegister } : {isRegistr: boolean, userRegiste
     );
 }
 
-const mapStateToProps = (todolistReducer: any) => {
+const mapStateToProps = ({todolistReducer} : {todolistReducer: any})=> {
     return { isRegistr: todolistReducer.isRegistr}
 }
   
