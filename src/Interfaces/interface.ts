@@ -26,6 +26,12 @@ import {
     isRegistr: boolean,
     isGoogle: boolean,
   }
+
+  export interface ToDoItemProps {
+    item: any,
+    removeTodo: Function,
+    editTodo: Function
+  }
   
   export interface getData {
     type:  typeof GET_DATA,
