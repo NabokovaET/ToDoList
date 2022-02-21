@@ -1,48 +1,52 @@
-import React, { useState, useEffect } from "react";
-import { connect } from 'react-redux'
-import { Form } from "react-bootstrap";
-import "./ToDoForm.scss";
-import { addTodo, checkAllTodo } from '../../actions/actionCreators';
-import { useMutation } from "@apollo/client";
+import React, { useState, useEffect } from 'react';
+import { Form } from 'react-bootstrap';
+import { useMutation } from '@apollo/client';
 import { ADD_TODO, COMPLETED_All_TODO } from '../../GraphQL/Mutation';
+import { useAppSelector, useAppDispatch } from '../../hooksRedux';
+import { addTodo, checkAllTodo } from '../../slices/todoSlice';
+import './ToDoForm.scss';
 
-const ToDoForm = ({ addTodo, checkAllTodo, isCheck, userId } : { addTodo: Function, checkAllTodo: Function, isCheck: boolean, userId: string }) => {
+const ToDoForm = () => {
+    const [value, setValue] = useState('');
+    const [newTodo, { data }] = useMutation(ADD_TODO);
+    const [completedAllTodo] = useMutation(COMPLETED_All_TODO);
 
-    console.log(userId)
-    const [ value, setValue ] = useState("");
-    const [ newTodo, { data } ] = useMutation(ADD_TODO);
-    const [ completedAllTodo] = useMutation(COMPLETED_All_TODO);
+    const isCheck = useAppSelector((state) => state.todos.isCheck);
+    const userId = useAppSelector((state) => state.todos.userId);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if(data) {addTodo(data)};
-    }, [data]);  
+        if (data) {
+            dispatch(addTodo(data.addTodo));
+        }
+    }, [data]);
 
-    const handelSubmit = (e: React.FormEvent<HTMLFormElement>):void => {
+    const handelSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        setValue("");
+        setValue('');
         if (value.trim()) {
-            newTodo({ 
-                variables: { 
-                    input: { name: value }, 
-                    userId: userId 
-                }
+            newTodo({
+                variables: {
+                    input: { name: value },
+                    userId: userId,
+                },
             });
-        };
+        }
     };
 
     return (
         <Form className='ToDoForm' onSubmit={handelSubmit}>
-            <label 
-                className={isCheck ? "ToDoForm__label check" : "ToDoForm__label"} 
+            <label
+                className={isCheck ? 'ToDoForm__label check' : 'ToDoForm__label'}
                 onClick={() => {
-                        completedAllTodo({ 
-                        variables: { 
-                            allCompleted: !isCheck, 
-                            userId: userId 
-                        }})
-                        checkAllTodo()
-                    }
-                }
+                    completedAllTodo({
+                        variables: {
+                            allCompleted: !isCheck,
+                            userId: userId,
+                        },
+                    });
+                    dispatch(checkAllTodo());
+                }}
             />
             <input
                 className='ToDoForm__input'
@@ -55,16 +59,4 @@ const ToDoForm = ({ addTodo, checkAllTodo, isCheck, userId } : { addTodo: Functi
     );
 };
 
-const mapStateToProps = ({todolistReducer} : {todolistReducer: any}) => {
-    const { isCheck, userId } = todolistReducer;
-    return { isCheck, userId }
-}
-  
-const mapDispatchToProps = (dispatch: Function) => {
-    return {
-        addTodo: (value: any) => dispatch(addTodo(value)),
-        checkAllTodo: () => dispatch(checkAllTodo())
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ToDoForm);
+export default ToDoForm;

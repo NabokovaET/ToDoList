@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
-import { connect } from 'react-redux';
 import { useMutation } from '@apollo/client';
 import { DELETE_TODO, COMPLETED_TODO, CHANGE_TODO } from '../../GraphQL/Mutation';
-import { removeTodo, editTodo } from '../../actions/actionCreators';
-import { ToDoItemProps } from '../../Interfaces/interface';
+import { useAppDispatch } from '../../hooksRedux';
+import { removeTodo, editTodo, checkTodo } from '../../slices/todoSlice';
+import { ToDo } from '../../Interfaces/interface';
 import './ToDoItem.scss';
 
-const ToDoItem = ({ item, removeTodo, editTodo }: ToDoItemProps) => {
+const ToDoItem = ({ item }: { item: ToDo }) => {
     const [edit, setEdit] = useState<boolean>(false);
     const [value, setValue] = useState<string>(item.name);
     const [deleteTodo, { data }] = useMutation(DELETE_TODO);
     const [completedTodo] = useMutation(COMPLETED_TODO);
     const [changeTodo] = useMutation(CHANGE_TODO);
 
+    const dispatch = useAppDispatch();
+
     useEffect(() => {
         if (data) {
-            removeTodo(item.id);
+            dispatch(removeTodo(item.id));
         }
     }, [data]);
 
@@ -29,7 +31,7 @@ const ToDoItem = ({ item, removeTodo, editTodo }: ToDoItemProps) => {
                     input: { name: value },
                 },
             });
-            editTodo(item.id, value);
+            dispatch(editTodo({ id: item.id, value: value }));
         }
         setEdit(false);
     };
@@ -39,7 +41,7 @@ const ToDoItem = ({ item, removeTodo, editTodo }: ToDoItemProps) => {
             <input
                 className={item.completed ? 'ToDoItem__checkbox checked' : 'ToDoItem__checkbox'}
                 type='checkbox'
-                onClick={() =>
+                onClick={() => {
                     completedTodo({
                         variables: {
                             id: item.id,
@@ -48,8 +50,9 @@ const ToDoItem = ({ item, removeTodo, editTodo }: ToDoItemProps) => {
                                 completed: !item.completed,
                             },
                         },
-                    })
-                }
+                    });
+                    dispatch(checkTodo(item.id));
+                }}
             />
             <label />
             {edit ? (
@@ -73,11 +76,4 @@ const ToDoItem = ({ item, removeTodo, editTodo }: ToDoItemProps) => {
     );
 };
 
-const mapDispatchToProps = (dispatch: Function) => {
-    return {
-        removeTodo: (id: number) => dispatch(removeTodo(id)),
-        editTodo: (id: number, name: string) => dispatch(editTodo(id, name)),
-    };
-};
-
-export default connect(null, mapDispatchToProps)(ToDoItem);
+export default ToDoItem;
