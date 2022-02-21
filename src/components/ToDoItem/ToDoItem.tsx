@@ -31,7 +31,7 @@ const ToDoItem = ({ item }: { item: ToDo }) => {
                     input: { name: value },
                 },
             });
-            dispatch(editTodo({ id: item.id, value: value }));
+            dispatch(editTodo({ id: item.id, name: value }));
         }
         setEdit(false);
     };

@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from '@apollo/client';
 import './index.scss';
 import App from './App';
-// import store from './store';
 import store from './store/store'
 import { setContext } from '@apollo/client/link/context';
 

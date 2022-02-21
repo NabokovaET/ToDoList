@@ -3,8 +3,8 @@ import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { userRegister } from '../../actions/actionCreators';
-import "./Register.scss";
 import eye from '../../img/eye.png';
+import "./Register.scss";
 
 interface Error {
     email?: string,
